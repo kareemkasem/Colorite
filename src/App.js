@@ -5,6 +5,8 @@ import { Switch, Route } from "react-router-dom";
 import "./styles/App.css";
 
 import Palette from "./Palette";
+import paletteList from "./PaletteList";
+import PaletteList from "./PaletteList";
 
 function App() {
   const findPalette = (id) => {
@@ -14,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/" render={() => <h1>hahaha</h1>} />
+        <Route exact path="/" render={() => <PaletteList />} />
         <Route
           exact
           path="/palette/:id"
