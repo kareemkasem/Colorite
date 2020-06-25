@@ -29,7 +29,6 @@ export default class ColorBox extends Component {
             <h1>copied</h1>
             <p>{background}</p>
           </div>
-
           {/* original divs */}
           <div className="box-container">
             <div className="box-content">

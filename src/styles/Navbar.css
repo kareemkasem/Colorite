@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=roboto&display=swap");
+.Navbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 8vh;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-right: 15px;
+  padding: 0 10px;
+  font-size: 23px;
+  font-family: "roboto", sans-serif;
+  background: #eceff1;
+}
+
+.logo a {
+  text-decoration: none;
+  color: black;
+}
+
+.slider {
+  display: inline-block;
+  margin: 0 10px;
+  width: 350px;
+}
+
+.rc-slider-track {
+  background: transparent;
+}
+
+.rc-slider-rail {
+  height: 8px;
+}
+
+.rc-slider-handle,
+rc-slider-handle:active,
+rc-slider-handle:hover,
+rc-slider-handle:focus {
+  background-color: green;
+  border: 2px solid green;
+  outline: none;
+  box-shadow: none;
+  width: 13px;
+  height: 13px;
+  margin-left: -7px;
+  margin-top: -3px;
+}
+
+.select-container {
+  margin-left: auto;
+  margin-right: 1rem;
+}
