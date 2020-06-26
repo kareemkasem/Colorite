@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import Slider, { range } from "rc-slider";
+import { withRouter } from "react-router-dom";
+import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import "./styles/Navbar.css";
 
-export default class Navbar extends Component {
+class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,12 +28,20 @@ export default class Navbar extends Component {
     this.setState({ open: false });
   };
 
+  goBack = () => {
+    this.props.history.goBack();
+  };
+
   render() {
     const { level, changeLevel } = this.props;
     return (
       <header className="Navbar">
         <div className="logo">
-          <Link to="/">color picker</Link>
+          <ArrowBackIosIcon
+            onClick={this.goBack}
+            style={{ cursor: "pointer" }}
+          />
+          <p>color picker</p>
         </div>
         <div className="slider-container">
           <span>level: {level}</span>
@@ -72,3 +80,5 @@ export default class Navbar extends Component {
     );
   }
 }
+
+export default withRouter(Navbar);

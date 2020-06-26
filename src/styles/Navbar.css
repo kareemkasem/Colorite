@@ -13,14 +13,24 @@
   height: 100%;
   margin-right: 15px;
   padding: 0 10px;
-  font-size: 23px;
+  font-size: 1.6rem;
   font-family: "roboto", sans-serif;
   background: #eceff1;
 }
 
 .logo a {
-  text-decoration: none;
   color: black;
+}
+
+.logo a:hover,
+.logo a:focus {
+  color: rgb(212, 64, 64);
+  outline: none;
+}
+
+.logo p {
+  font-weight: 400;
+  margin-top: 17px;
 }
 
 .slider {

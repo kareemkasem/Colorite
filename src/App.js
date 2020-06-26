@@ -5,7 +5,6 @@ import { Switch, Route } from "react-router-dom";
 import "./styles/App.css";
 
 import Palette from "./Palette";
-import paletteList from "./PaletteList";
 import PaletteList from "./PaletteList";
 
 function App() {
@@ -26,7 +25,7 @@ function App() {
             />
           )}
         />
-        <Route render={() => <h1>lol go back nigga</h1>} />
+        <Route render={() => <h1>lol, wrong direction. go back nigga.</h1>} />
       </Switch>
     </div>
   );
