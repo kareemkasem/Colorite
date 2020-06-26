@@ -7,10 +7,12 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     background: "#F5F5F5",
+    borderRadius: "10px",
+    transition: "transform 0.2s ease-in-out",
     "&:hover": {
       cursor: "pointer",
-      boxShadow: "0px 0px 8px 1px rgba(161,152,161,1)",
-      transform: "scale(1.02)",
+      boxShadow: "0px 0px 8px 1px rgba(161,152,161,0.5)",
+      transform: "scale(1.04)",
     },
   },
   smallBox: {
