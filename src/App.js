@@ -6,6 +6,7 @@ import "./styles/App.css";
 
 import Palette from "./Palette";
 import PaletteList from "./PaletteList";
+import SingleColorPalette from "./SingleColorPalette"
 
 function App() {
   const findPalette = (id) => {
@@ -25,6 +26,12 @@ function App() {
             />
           )}
         />
+        <Route exact path="/palette/:paletteId/:colorId" render={(routeProps)=>
+          <SingleColorPalette
+           palette={generatePalette(findPalette(routeProps.match.params.paletteId))}
+           />
+         }
+           />
         <Route render={() => <h1>lol, wrong direction. go back nigga.</h1>} />
       </Switch>
     </div>

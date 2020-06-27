@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import "./styles/ColorBox.css";
 
-export default class ColorBox extends Component {
+class ColorBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,8 +17,13 @@ export default class ColorBox extends Component {
     });
   };
 
+  seeMore = (e) => {
+    this.props.history.push(this.props.moreUrl);
+    e.stopPropagation();
+  };
+
   render() {
-    const { name, background } = this.props;
+    const { name, background, seeMoreLink } = this.props;
     const overlayClass = `copy-overlay ${this.state.copied ? "show" : ""}`;
     const overlayMsgClass = `copy-msg ${this.state.copied ? "show" : ""}`;
     return (
@@ -36,9 +42,15 @@ export default class ColorBox extends Component {
             </div>
             <button className="copy-btn">copy</button>
           </div>
-          <span className="see-more">more</span>
+          {seeMoreLink && (
+            <span className="see-more" onClick={this.seeMore}>
+              more
+            </span>
+          )}
         </div>
       </CopyToClipboard>
     );
   }
 }
+
+export default withRouter(ColorBox);

@@ -9,6 +9,10 @@
   text-transform: uppercase;
 }
 
+.SingleColorPalette .ColorBox{
+  height: 50%;
+}
+
 .copy-btn {
   width: 100px;
   height: 30px;
