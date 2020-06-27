@@ -46,7 +46,7 @@ export default class Palette extends Component {
           showSlider
         />
         <div className="palette-colors">{colorBoxes}</div>
-        <Footer {...this.props.pallette}/>
+        <Footer {...this.props.palette} />
       </div>
     );
   }

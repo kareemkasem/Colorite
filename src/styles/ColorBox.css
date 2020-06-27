@@ -9,7 +9,16 @@
   text-transform: uppercase;
 }
 
-.SingleColorPalette .ColorBox{
+.dark-text {
+  color: black !important;
+  background: rgb(0,0,0,0.05) !important;
+}
+
+.light-text {
+  color: white ;
+}
+
+.SingleColorPalette .ColorBox {
   height: 50%;
 }
 

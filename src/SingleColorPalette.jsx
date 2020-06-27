@@ -53,12 +53,12 @@ class SingleColorPalette extends Component {
         />
         <div className="palette-colors">
         {colorBoxes}
-        <ColorBox
-          background={`linear-gradient(180deg, ${shades[1].hex} , ${shades[8].hex})`}
-          name="gradient(hex)"
-          key={uuid()}
-          seeMoreLink={false}
-        />
+           <ColorBox
+            background={`linear-gradient(180deg, ${shades[1].hex} , ${shades[8].hex})`}
+            name="gradient(hex)"
+            key={uuid()}
+            seeMoreLink={false}
+           />
         </div>
         <Footer {...this.props.palette} />
       </div>
