@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/styles";
-import seedColors from "./seedColors";
+import { withRouter } from "react-router-dom";
 import listBackground from "./assets/listBackground.jpg";
 
 import MiniPalette from "./MiniPalette";
@@ -46,12 +46,17 @@ const styles = {
 };
 
 class PaletteList extends Component {
+
+  createPalette = ()=>{
+    this.props.history.push("/palette/new")
+  }
+
   render() {
     const { classes } = this.props;
-    const paths = seedColors.map((palette) => {
+    const paths = this.props.palettes.map((palette) => {
       return <MiniPalette {...palette} />;
     });
-    const addNew = <div className={classes.addNew}>+</div>;
+    const addNew = <div className={classes.addNew} onClick={this.createPalette}>+</div>;
     return (
       <div className={classes.root}>
         <div className={classes.content}>
@@ -65,4 +70,4 @@ class PaletteList extends Component {
   }
 }
 
-export default withStyles(styles)(PaletteList);
+export default withRouter(withStyles(styles)(PaletteList));
