@@ -16,7 +16,7 @@ import { ChromePicker } from "react-color";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import chroma from "chroma-js";
 
-import DragableColorBox from "./DragableColorBox";
+import DragableColorList from "./DragableColorList";
 
 const drawerWidth = 300;
 
@@ -61,7 +61,7 @@ const styles = (theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: `5px`,
+    padding: `10px`,
     height: `calc(100vh - 48px)`,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -87,6 +87,8 @@ class NewPaletteForm extends Component {
       pickedName: "",
       colors: [],
       canAddColor: true,
+      newPaletteName: "",
+      newPaletteEmoji: "x",
     };
   }
 
@@ -100,6 +102,14 @@ class NewPaletteForm extends Component {
       return this.state.colors.every(
         ({ color }) => color !== this.state.pickedColor
       );
+    });
+    ValidatorForm.addValidationRule("isPaletteNameUnique", () => {
+      return this.props.palettes.every(
+        ({ paletteName }) => paletteName !== this.state.newpaletteName
+      );
+    });
+    ValidatorForm.addValidationRule("atLeastFiveColors", () => {
+      return this.state.colors.length >= 5
     });
   }
 
@@ -126,18 +136,22 @@ class NewPaletteForm extends Component {
     }
   };
 
-  removeColor = (color) => {
-    this.setState((st) => ({ colors: st.colors.filter((c) => c !== color) }));
+  removeColor = (colorName) => {
+    this.setState((st) => ({ colors: st.colors.filter(({name}) => name !== colorName) }));
   };
 
   handleChange = (evt) => {
     this.setState({ [evt.target.name]: evt.target.value });
   };
 
+  submitPalette = ()=> {
+    console.log("lol ya negm")
+  }
+
   savePalette = ()=> {
-    const paletteName = "hardcoded name"
-    const id = paletteName.toLocaleLowerCase().replace(" ", "-")
-    const emoji = "🧪"
+    const paletteName = this.state.newPaletteName
+    const id = paletteName.toLowerCase().replace(" ", "-")
+    const emoji = this.state.newPaletteEmoji
     const colors = this.state.colors
     const palette = {paletteName, id, emoji, colors}
     this.props.savePalette(palette)
@@ -158,14 +172,6 @@ class NewPaletteForm extends Component {
       textColor = "black";
     }
 
-    const colorBoxes = this.state.colors.map((color) => (
-      <DragableColorBox
-        background={color.color}
-        name={color.name}
-        remover={() => this.removeColor(color)}
-      />
-    ));
-
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -177,7 +183,6 @@ class NewPaletteForm extends Component {
           })}
         >
           <Toolbar disableGutters={!open}>
-            <div className="left-btns">
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
@@ -189,13 +194,29 @@ class NewPaletteForm extends Component {
               <Typography variant="h6" color="inherit" noWrap>
                 Create A Palette
               </Typography>
-            </div>
+              <ValidatorForm onSubmit={this.savePalette} autoComplete="off">
+                <TextValidator
+                  value={this.state.newPaletteName}
+                  name="newPaletteName"
+                  label="palette name"
+                  onChange={this.handleChange}
+                  validators={["required", "isPaletteNameUnique", "atLeastFiveColors"]}
+                  errorMessages={["this field is required", "name must be unique", "add at least five colors to the palette"]}
+                  />
 
-            <div className="right-btns">
               <Button
                 variant="contained"
                 color="primary"
-                onClick={this.savePalette}
+                type="submit"
+              >
+                Save
+              </Button>
+            </ValidatorForm>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.submitPalette}
               >
                 Save Palette
               </Button>
@@ -206,7 +227,6 @@ class NewPaletteForm extends Component {
               >
                 back
               </Button>
-            </div>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -226,19 +246,16 @@ class NewPaletteForm extends Component {
           <Divider />
           <Typography variant="h4">Design your palette</Typography>
           <div className="">
-            <IconButton>
               <Button variant="contained" color="secondary">
                 Clear Palette
               </Button>
-            </IconButton>
-            <IconButton>
+
               <Button variant="contained" color="primary">
                 Random Color
               </Button>
-            </IconButton>
           </div>
           <ChromePicker color={pickedColor} onChangeComplete={this.pickColor} />
-          <ValidatorForm onSubmit={this.addNewColor}>
+          <ValidatorForm onSubmit={this.addNewColor} autoComplete="off">
             <TextValidator
               name="pickedName"
               value={this.state.pickedName}
@@ -250,7 +267,6 @@ class NewPaletteForm extends Component {
                 "color must be unique",
               ]}
             />
-            <IconButton>
               <Button
                 variant="contained"
                 type="submit"
@@ -258,7 +274,6 @@ class NewPaletteForm extends Component {
               >
                 Add color
               </Button>
-            </IconButton>
           </ValidatorForm>
         </Drawer>
         <main
@@ -267,7 +282,10 @@ class NewPaletteForm extends Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          {colorBoxes}
+          <DragableColorList
+            colors={this.state.colors}
+            handleRemove={this.removeColor}
+            />
         </main>
       </div>
     );

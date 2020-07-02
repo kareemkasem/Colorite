@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/styles";
 import { withRouter } from "react-router-dom";
+import uuid from "uuid/dist/v4";
 import listBackground from "./assets/listBackground.jpg";
 
 import MiniPalette from "./MiniPalette";
@@ -54,9 +55,9 @@ class PaletteList extends Component {
   render() {
     const { classes } = this.props;
     const paths = this.props.palettes.map((palette) => {
-      return <MiniPalette {...palette} />;
+      return <MiniPalette {...palette} key={uuid()}/>;
     });
-    const addNew = <div className={classes.addNew} onClick={this.createPalette}>+</div>;
+    const addNew = <div className={classes.addNew} onClick={this.createPalette} key={uuid()}>+</div>;
     return (
       <div className={classes.root}>
         <div className={classes.content}>

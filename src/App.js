@@ -27,7 +27,11 @@ state = {
     <div className="App">
       <Switch>
         <Route exact path="/" render={() => <PaletteList palettes={this.state.palettes}/>} />
-        <Route exact path="/palette/new" render={()=> <NewPaletteForm savePalette={this.savePalette}/>} />
+        <Route
+          exact
+          path="/palette/new"
+          render={()=> <NewPaletteForm savePalette={this.savePalette} palettes={this.state.palettes}/>} 
+          />
         <Route
           exact
           path="/palette/:id"

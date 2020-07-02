@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/styles";
 import { withRouter } from "react-router-dom";
+import uuid from "uuid/dist/v4";
 
 const styles = {
   root: {
@@ -40,7 +41,7 @@ const styles = {
 function MiniPalette(props) {
   const { classes, paletteName, id, emoji, colors } = props;
   const colorGrid = colors.map((c) => (
-    <div className={classes.smallBox} style={{ background: c.color }}></div>
+    <div className={classes.smallBox} style={{ background: c.color }} key={uuid()}></div>
   ));
 
   const goToPalette = () => props.history.push(`/palette/${id}`);

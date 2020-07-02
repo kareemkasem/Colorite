@@ -30,11 +30,12 @@ const styles = {
     bottom: "10px",
     font: '"roboto", sans-serif',
     size: "1rem",
-    fontWeight: "400"
+    fontWeight: "400",
+    userSelect:"none"
   },
 };
 
-function DragableColorBox(props) {
+const DragableColorBox = (props)=> {
   let textColor;
   if (chroma(props.background).luminance() <= 0.08){
     textColor = "white"
@@ -55,14 +56,13 @@ function DragableColorBox(props) {
       className={props.classes.root}
       style={{ background: props.background }}
     >
-      <div className={props.classes.content}>
-        <IconButton onClick={props.remover}>
-          <DeleteIcon style={{color: textColor}}></DeleteIcon>
+      <div className={props.classes.content} onClick={props.remover}>
+        <IconButton>
+          <DeleteIcon style={{color: textColor}} />
         </IconButton>
         <p style={{color: textColor}}>{name}</p>
       </div>
     </div>
   );
 }
-
 export default withStyles(styles)(DragableColorBox);
