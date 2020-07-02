@@ -7,8 +7,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = {
   root: {
-    width: "20%",
-    height: "25%",
+    width: "100%",
+    height: "100%",
     margin: "0 auto",
     padding: "0",
     marginBottom: "-5px",

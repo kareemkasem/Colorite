@@ -85,7 +85,14 @@ class NewPaletteForm extends Component {
       open: false,
       pickedColor: "#DA3A3A",
       pickedName: "",
-      colors: [],
+      colors: [
+        { name: "test-red", color: "#F44336" },
+        { name: "test-pink", color: "#E91E63" },
+        { name: "test-purple", color: "#9C27B0" },
+        { name: "test-deeppurple", color: "#673AB7" },
+        { name: "test-indigo", color: "#3F51B5" },
+        { name: "test-cyan", color: "#00BCD4" },
+      ],
       canAddColor: true,
       newPaletteName: "",
       newPaletteEmoji: "x",
@@ -143,6 +150,10 @@ class NewPaletteForm extends Component {
   handleChange = (evt) => {
     this.setState({ [evt.target.name]: evt.target.value });
   };
+
+  changeOrder = (newOrder) => {
+    this.setState({colors: newOrder})
+  }
 
   submitPalette = ()=> {
     console.log("lol ya negm")
@@ -285,6 +296,7 @@ class NewPaletteForm extends Component {
           <DragableColorList
             colors={this.state.colors}
             handleRemove={this.removeColor}
+            changeOrder={this.changeOrder}
             />
         </main>
       </div>
