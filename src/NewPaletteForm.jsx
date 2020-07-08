@@ -1,21 +1,17 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import Button from "@material-ui/core/Button";
-import { ChromePicker } from "react-color";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import chroma from "chroma-js";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
+import PaletteFormNav from "./PaletteFormNav";
+import ColorPicker from "./ColorPicker";
 import DragableColorList from "./DragableColorList";
 
 const drawerWidth = 300;
@@ -23,24 +19,6 @@ const drawerWidth = 300;
 const styles = (theme) => ({
   root: {
     display: "flex",
-  },
-  appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 20,
   },
   hide: {
     display: "none",
@@ -59,10 +37,30 @@ const styles = (theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: "flex-end",
   },
+  drawerContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContetnt: "strech",
+    width: "92%",
+    margin: "15px 4%",
+  },
+  drawerTitle: {
+    fontSize: "1.95rem",
+  },
+  drawerBtns: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    margin: "10px 0",
+    "& Button": {
+      fontSize: "0.8rem",
+    },
+  },
   content: {
     flexGrow: 1,
-    padding: `10px`,
-    height: `calc(100vh - 48px)`,
+    padding: `0.25rem`,
+    height: `calc(100vh - 4rem)`,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -83,41 +81,10 @@ class NewPaletteForm extends Component {
     super(props);
     this.state = {
       open: false,
-      pickedColor: "#DA3A3A",
-      pickedName: "",
-      colors: [
-        { name: "test-red", color: "#F44336" },
-        { name: "test-pink", color: "#E91E63" },
-        { name: "test-purple", color: "#9C27B0" },
-        { name: "test-deeppurple", color: "#673AB7" },
-        { name: "test-indigo", color: "#3F51B5" },
-        { name: "test-cyan", color: "#00BCD4" },
-      ],
+      snackbarOpen: false,
+      colors: this.props.palettes[0].colors,
       canAddColor: true,
-      newPaletteName: "",
-      newPaletteEmoji: "x",
     };
-  }
-
-  componentDidMount() {
-    ValidatorForm.addValidationRule("isNameUnique", (value) => {
-      return this.state.colors.every(
-        ({ name }) => name.toLowerCase() !== value.toLowerCase()
-      );
-    });
-    ValidatorForm.addValidationRule("isColorUnique", () => {
-      return this.state.colors.every(
-        ({ color }) => color !== this.state.pickedColor
-      );
-    });
-    ValidatorForm.addValidationRule("isPaletteNameUnique", () => {
-      return this.props.palettes.every(
-        ({ paletteName }) => paletteName !== this.state.newpaletteName
-      );
-    });
-    ValidatorForm.addValidationRule("atLeastFiveColors", () => {
-      return this.state.colors.length >= 5
-    });
   }
 
   handleDrawerOpen = () => {
@@ -128,118 +95,74 @@ class NewPaletteForm extends Component {
     this.setState({ open: false });
   };
 
-  pickColor = (newColor) => {
-    this.setState({ pickedColor: newColor.hex });
+  changeOrder = (newOrder) => {
+    this.setState({ colors: newOrder });
   };
 
-  addNewColor = () => {
-    if (this.state.canAddColor) {
-      this.setState((st) => ({
-        colors: [...st.colors, { color: st.pickedColor, name: st.pickedName }],
-        canAddColor: st.colors.length < 19,
-      }));
-    } else {
-      alert("can't add more than 20 colors");
-    }
+  openSnackbar = () => {
+    this.setState({ snackbarOpen: true });
+  };
+
+  closeSnackbar = () => {
+    this.setState({ snackbarOpen: false });
+  };
+
+  setColors = (newColors) => {
+    this.setState((st) => ({
+      colors: newColors,
+      canAddColor: st.colors.length < 19,
+    }));
   };
 
   removeColor = (colorName) => {
-    this.setState((st) => ({ colors: st.colors.filter(({name}) => name !== colorName) }));
+    this.setState((st) => ({
+      colors: st.colors.filter(({ name }) => name !== colorName),
+    }));
   };
 
-  handleChange = (evt) => {
-    this.setState({ [evt.target.name]: evt.target.value });
+  clearPalette = () => {
+    this.setState({ colors: [] });
   };
 
-  changeOrder = (newOrder) => {
-    this.setState({colors: newOrder})
-  }
+  savePalette = (newPaletteName, newPaletteEmoji) => {
+    const paletteName = newPaletteName;
+    const id = paletteName.toLowerCase().replace(" ", "-");
+    const emoji = newPaletteEmoji;
+    const colors = this.state.colors;
+    const palette = { paletteName, id, emoji, colors };
+    this.props.savePalette(palette);
+  };
 
-  submitPalette = ()=> {
-    console.log("lol ya negm")
-  }
-
-  savePalette = ()=> {
-    const paletteName = this.state.newPaletteName
-    const id = paletteName.toLowerCase().replace(" ", "-")
-    const emoji = this.state.newPaletteEmoji
-    const colors = this.state.colors
-    const palette = {paletteName, id, emoji, colors}
-    this.props.savePalette(palette)
-  }
-
-  goBack = ()=> {
-    this.props.history.goBack()
-  }
+  randomColor = () => {
+    if (this.state.colors.length < 20) {
+      const allColors = this.props.palettes.map((p) => p.colors).flat();
+      const randomColor =
+        allColors[Math.floor(Math.random() * allColors.length)];
+      this.setState((st) => {
+        return {
+          colors: [...st.colors, randomColor],
+          canAddColor: st.colors.length < 19,
+        };
+      });
+    } else {
+      this.openSnackbar();
+    }
+  };
 
   render() {
-    const { classes } = this.props;
-    const { open, pickedColor } = this.state;
-
-    let textColor;
-    if (chroma(this.state.pickedColor).luminance() <= 0.08) {
-      textColor = "white";
-    } else {
-      textColor = "black";
-    }
+    const { classes, palettes } = this.props;
+    const { open, colors, canAddColor } = this.state;
 
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          color="default"
-          className={classNames(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
-          <Toolbar disableGutters={!open}>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
-              >
-                <AddToPhotosIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" noWrap>
-                Create A Palette
-              </Typography>
-              <ValidatorForm onSubmit={this.savePalette} autoComplete="off">
-                <TextValidator
-                  value={this.state.newPaletteName}
-                  name="newPaletteName"
-                  label="palette name"
-                  onChange={this.handleChange}
-                  validators={["required", "isPaletteNameUnique", "atLeastFiveColors"]}
-                  errorMessages={["this field is required", "name must be unique", "add at least five colors to the palette"]}
-                  />
-
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Save
-              </Button>
-            </ValidatorForm>
-
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.submitPalette}
-              >
-                Save Palette
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={this.goBack}
-              >
-                back
-              </Button>
-          </Toolbar>
-        </AppBar>
+        <PaletteFormNav
+          open={open}
+          palettes={palettes}
+          savePalette={this.savePalette}
+          colors={colors}
+          handleDrawerOpen={this.handleDrawerOpen}
+          openSnackbar={this.openSnackbar}
+        />
         <Drawer
           className={classes.drawer}
           variant="persistent"
@@ -255,37 +178,34 @@ class NewPaletteForm extends Component {
             </IconButton>
           </div>
           <Divider />
-          <Typography variant="h4">Design your palette</Typography>
-          <div className="">
-              <Button variant="contained" color="secondary">
+          <div className={classes.drawerContent}>
+            <Typography variant="h4" className={classes.drawerTitle}>
+              Design your palette
+            </Typography>
+            <div className={classes.drawerBtns}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.clearPalette}
+              >
                 Clear Palette
               </Button>
 
-              <Button variant="contained" color="primary">
-                Random Color
-              </Button>
-          </div>
-          <ChromePicker color={pickedColor} onChangeComplete={this.pickColor} />
-          <ValidatorForm onSubmit={this.addNewColor} autoComplete="off">
-            <TextValidator
-              name="pickedName"
-              value={this.state.pickedName}
-              onChange={this.handleChange}
-              validators={["required", "isNameUnique", "isColorUnique"]}
-              errorMessages={[
-                "Enter a name",
-                "name must be unique",
-                "color must be unique",
-              ]}
-            />
               <Button
                 variant="contained"
-                type="submit"
-                style={{ background: pickedColor, color: textColor }}
+                color="primary"
+                onClick={this.randomColor}
               >
-                Add color
+                Random Color
               </Button>
-          </ValidatorForm>
+            </div>
+            <ColorPicker
+              colors={colors}
+              setColors={this.setColors}
+              canAddColor={canAddColor}
+              openSnackbar={this.openSnackbar}
+            />
+          </div>
         </Drawer>
         <main
           className={classNames(classes.content, {
@@ -297,10 +217,22 @@ class NewPaletteForm extends Component {
             colors={this.state.colors}
             handleRemove={this.removeColor}
             changeOrder={this.changeOrder}
-            />
+          />
         </main>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          open={this.state.snackbarOpen}
+          autoHideDuration={2000}
+          message={<span>you can only add up to 20 colors</span>}
+          onClose={this.closeSnackbar}
+          action={[
+            <IconButton onClick={this.closeSnackbar} color="inherit">
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }
 }
-export default withRouter(withStyles(styles, { withTheme: true })(NewPaletteForm));
+export default withStyles(styles, { withTheme: true })(NewPaletteForm);
