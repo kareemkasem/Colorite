@@ -12,7 +12,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "strech",
     width: "100%",
-    margin: "15px 0",
   },
   validatorForm: {
     display: "flex",

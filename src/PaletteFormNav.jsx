@@ -8,8 +8,9 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 import Button from "@material-ui/core/Button";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { withStyles } from "@material-ui/core/styles";
+
+import NewPaletteMeta from "./NewPaletteMeta";
 
 const drawerWidth = 300;
 
@@ -42,44 +43,14 @@ const styles = (theme) => ({
     display: "flex",
     alignItems: "center",
     "& button": {
-      marginRight: "5px",
+      margin: "0 5px",
     },
   },
 });
 
 class PaletteFormNav extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      newPaletteName: "",
-      newPaletteEmoji: "x",
-    };
-  }
-
-  componentDidMount() {
-    ValidatorForm.addValidationRule("isPaletteNameUnique", () => {
-      return this.props.palettes.every(
-        ({ paletteName }) => paletteName !== this.state.newpaletteName
-      );
-    });
-    ValidatorForm.addValidationRule("atLeastFiveColors", () => {
-      return this.props.colors.length >= 5;
-    });
-  }
-
-  handleChange = (evt) => {
-    this.setState({ [evt.target.name]: evt.target.value });
-  };
-
-  savePalette = () => {
-    this.props.savePalette(
-      this.state.newPaletteName,
-      this.state.stnewPaletteEmoji
-    );
-  };
-
-  submitPalette = () => {
-    console.log("lol ya negm");
+  savePalette = (name, emoji) => {
+    this.props.savePalette(name, emoji);
   };
 
   goBack = () => {
@@ -112,13 +83,11 @@ class PaletteFormNav extends Component {
             </Typography>
           </Toolbar>
           <div className={classes.navbarBtns}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.submitPalette}
-            >
-              Save Palette
-            </Button>
+            <NewPaletteMeta
+              palettes={this.props.palettes}
+              colors={this.props.colors}
+              savePalette={this.props.savePalette}
+            />
             <Button variant="contained" color="secondary" onClick={this.goBack}>
               back
             </Button>
@@ -130,24 +99,3 @@ class PaletteFormNav extends Component {
 }
 
 export default withRouter(withStyles(styles)(PaletteFormNav));
-
-// const nextForm = (
-//   <ValidatorForm onSubmit={this.savePalette} autoComplete="off">
-//     <TextValidator
-//       value={this.state.newPaletteName}
-//       name="newPaletteName"
-//       label="palette name"
-//       onChange={this.handleChange}
-//       validators={["required", "isPaletteNameUnique", "atLeastFiveColors"]}
-//       errorMessages={[
-//         "this field is required",
-//         "name must be unique",
-//         "add at least five colors to the palette",
-//       ]}
-//     />
-
-//     <Button variant="contained" color="primary" type="submit">
-//       Save
-//     </Button>
-//   </ValidatorForm>
-// );
