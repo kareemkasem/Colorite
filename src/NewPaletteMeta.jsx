@@ -94,14 +94,14 @@ export default class NewPaletteMeta extends Component {
           </DialogActions>
         </ValidatorForm>
       ) : (
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <Picker
             set="twitter"
             onSelect={this.addEmoji}
             title="Pick your emoji…"
             emoji="point_up"
             style={{
-              margin: "auto",
+              alignSelf: "center",
             }}
           />
           <DialogActions style={{ alignSelf: "flex-end" }}>
@@ -133,7 +133,12 @@ export default class NewPaletteMeta extends Component {
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Save Palette 🎨</DialogTitle>
+          <DialogTitle id="form-dialog-title">
+            Save Palette{" "}
+            <span role="img" aria-label="palette emoji">
+              🎨
+            </span>
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               pick a name and emoji for your new create palette

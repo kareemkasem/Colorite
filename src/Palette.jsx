@@ -44,6 +44,7 @@ export default class Palette extends Component {
           changeFormat={this.changeFormat}
           title="color picker"
           showSlider
+          deletePalette={this.props.deletePalette}
         />
         <div className="palette-colors">{colorBoxes}</div>
         <Footer {...this.props.palette} />

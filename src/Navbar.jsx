@@ -7,6 +7,7 @@ import Select from "@material-ui/core/Select";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import "./styles/Navbar.css";
 
@@ -32,8 +33,18 @@ class Navbar extends Component {
     this.props.history.goBack();
   };
 
+  deletePalette = () => {
+    const deleteConfirmed = window.confirm("are you sure you want to delete ?");
+    if (deleteConfirmed) {
+      this.props.deletePalette(this.props.match.params.id);
+      this.props.history.push("/");
+    } else {
+      return;
+    }
+  };
+
   render() {
-    const { level, changeLevel,title } = this.props;
+    const { level, changeLevel, title } = this.props;
     return (
       <header className="Navbar">
         <div className="logo">
@@ -58,6 +69,9 @@ class Navbar extends Component {
           </div>
         )}
         <div className="select-container">
+          <IconButton onClick={this.deletePalette}>
+            <DeleteForeverIcon />
+          </IconButton>
           <Select value={this.state.format} onChange={this.handleChange}>
             <MenuItem value="hex">HEX</MenuItem>
             <MenuItem value="rgb">RGB</MenuItem>
