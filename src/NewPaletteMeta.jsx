@@ -5,6 +5,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
@@ -15,6 +18,7 @@ export default class NewPaletteMeta extends Component {
     currentContent: "name",
     newPaletteName: "",
     newPaletteEmoji: "",
+    snackbarOpen: false,
   };
 
   componentDidMount = () => {
@@ -23,9 +27,6 @@ export default class NewPaletteMeta extends Component {
         ({ paletteName }) => paletteName !== this.props.newpaletteName
       );
     });
-    ValidatorForm.addValidationRule("atLeastFiveColors", () => {
-      return this.props.colors.length >= 5;
-    });
   };
 
   handleChange = (evt) => {
@@ -33,11 +34,19 @@ export default class NewPaletteMeta extends Component {
   };
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+    if (this.props.colors.length >= 5) {
+      this.setState({ open: true });
+    } else {
+      this.setState({ snackbarOpen: true });
+    }
   };
 
   handleClose = () => {
     this.setState({ open: false, currentContent: "name" });
+  };
+
+  closeSnackbar = () => {
+    this.setState({ snackbarOpen: false });
   };
 
   displayEmojiPicker = () => {
@@ -59,7 +68,6 @@ export default class NewPaletteMeta extends Component {
       <span
         style={{
           fontSize: "1.5rem",
-          justifySelf: "flex-start",
           margin: "0 5px",
         }}
       >
@@ -87,16 +95,8 @@ export default class NewPaletteMeta extends Component {
             name="newPaletteName"
             label="palette name"
             onChange={this.handleChange}
-            validators={[
-              "required",
-              "isPaletteNameUnique",
-              "atLeastFiveColors",
-            ]}
-            errorMessages={[
-              "this field is required",
-              "name must be unique",
-              "add at least five colors to the palette",
-            ]}
+            validators={["required", "isPaletteNameUnique"]}
+            errorMessages={["this field is required", "name must be unique"]}
           />
           <div className="" style={{ alignSelf: "flex-end" }}>
             <DialogActions>
@@ -120,9 +120,9 @@ export default class NewPaletteMeta extends Component {
               alignSelf: "center",
             }}
           />
-          <DialogActions style={{ width: "100%" }}>
+          <DialogActions style={{ width: "100%", justifySelf: "flex-end" }}>
             {emojiMessage}
-            <div style={{ justifySelf: "flex-end" }}>
+            <div>
               <Button
                 variant="contained"
                 color="primary"
@@ -165,6 +165,18 @@ export default class NewPaletteMeta extends Component {
           </DialogContent>
           {currentContent}
         </Dialog>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={this.state.snackbarOpen}
+          autoHideDuration={2000}
+          message={<span>the palette must be 5 colors minimum</span>}
+          onClose={this.closeSnackbar}
+          action={[
+            <IconButton onClick={this.closeSnackbar} color="inherit">
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     );
   }
