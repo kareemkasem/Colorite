@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -131,6 +132,7 @@ class NewPaletteForm extends Component {
     const colors = this.state.colors;
     const palette = { paletteName, id, emoji, colors };
     this.props.savePalette(palette);
+    this.props.history.push("/");
   };
 
   randomColor = () => {
@@ -235,4 +237,6 @@ class NewPaletteForm extends Component {
     );
   }
 }
-export default withStyles(styles, { withTheme: true })(NewPaletteForm);
+export default withRouter(
+  withStyles(styles, { withTheme: true })(NewPaletteForm)
+);

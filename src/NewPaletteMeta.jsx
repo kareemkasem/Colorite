@@ -14,7 +14,7 @@ export default class NewPaletteMeta extends Component {
     open: false,
     currentContent: "name",
     newPaletteName: "",
-    newPaletteEmoji: "x",
+    newPaletteEmoji: "",
   };
 
   componentDidMount = () => {
@@ -55,6 +55,20 @@ export default class NewPaletteMeta extends Component {
   };
 
   render() {
+    const emojiMessage = !!this.state.newPaletteEmoji ? (
+      <span
+        style={{
+          fontSize: "1.5rem",
+          justifySelf: "flex-start",
+          margin: "0 5px",
+        }}
+      >
+        {this.state.newPaletteEmoji} picked
+      </span>
+    ) : (
+      ""
+    );
+
     const currentContent =
       this.state.currentContent === "name" ? (
         <ValidatorForm
@@ -84,14 +98,16 @@ export default class NewPaletteMeta extends Component {
               "add at least five colors to the palette",
             ]}
           />
-          <DialogActions style={{ alignSelf: "flex-end" }}>
-            <Button variant="contained" color="primary" type="submit">
-              Save
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
-          </DialogActions>
+          <div className="" style={{ alignSelf: "flex-end" }}>
+            <DialogActions>
+              <Button variant="contained" color="primary" type="submit">
+                Save
+              </Button>
+              <Button onClick={this.handleClose} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </div>
         </ValidatorForm>
       ) : (
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -104,17 +120,20 @@ export default class NewPaletteMeta extends Component {
               alignSelf: "center",
             }}
           />
-          <DialogActions style={{ alignSelf: "flex-end" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.savePalette}
-            >
-              Save
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
+          <DialogActions style={{ width: "100%" }}>
+            {emojiMessage}
+            <div style={{ justifySelf: "flex-end" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.savePalette}
+              >
+                Save
+              </Button>
+              <Button onClick={this.handleClose} color="primary">
+                Cancel
+              </Button>
+            </div>
           </DialogActions>
         </div>
       );
