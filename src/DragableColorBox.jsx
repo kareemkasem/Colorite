@@ -4,14 +4,12 @@ import chroma from "chroma-js";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-
 const styles = {
   root: {
     width: "100%",
     height: "100%",
     margin: "0 auto",
     padding: "0",
-    marginBottom: "-5px",
     display: "inline-block",
     position: "relative",
     cursor: "grab",
@@ -31,24 +29,23 @@ const styles = {
     font: '"roboto", sans-serif',
     size: "1rem",
     fontWeight: "400",
-    userSelect:"none"
+    userSelect: "none",
   },
 };
 
-const DragableColorBox = (props)=> {
+const DragableColorBox = (props) => {
   let textColor;
-  if (chroma(props.background).luminance() <= 0.08){
-    textColor = "white"
+  if (chroma(props.background).luminance() <= 0.08) {
+    textColor = "white";
   } else {
-    textColor= "dark"
+    textColor = "dark";
   }
 
-
   let name;
-  if(props.name.length > 15){
-    name = props.name.substr(0,16) + "..."
-  }else{
-    name = props.name
+  if (props.name.length > 15) {
+    name = props.name.substr(0, 16) + "...";
+  } else {
+    name = props.name;
   }
 
   return (
@@ -58,11 +55,11 @@ const DragableColorBox = (props)=> {
     >
       <div className={props.classes.content} onClick={props.remover}>
         <IconButton>
-          <DeleteIcon style={{color: textColor}} />
+          <DeleteIcon style={{ color: textColor }} />
         </IconButton>
-        <p style={{color: textColor}}>{name}</p>
+        <p style={{ color: textColor }}>{name}</p>
       </div>
     </div>
   );
-}
+};
 export default withStyles(styles)(DragableColorBox);
